@@ -3,6 +3,16 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* EduBridge Africa brand palette — PRD Section 8.2 */
+  --color-teal: #114c5a;
+  --color-teal-dark: #172b36;
+  --color-yellow: #ffc801;
+  --color-orange: #ff9932;
+  --color-mint: #d9e8e2;
+  --color-arctic: #f1f6f4;
+  --color-text-dark: #172b36;
+  --color-text-body: #3a5a66;
 }
 
 @theme inline {
@@ -10,6 +20,15 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-brand-teal: var(--color-teal);
+  --color-brand-teal-dark: var(--color-teal-dark);
+  --color-brand-yellow: var(--color-yellow);
+  --color-brand-orange: var(--color-orange);
+  --color-brand-mint: var(--color-mint);
+  --color-brand-arctic: var(--color-arctic);
+  --color-brand-text-dark: var(--color-text-dark);
+  --color-brand-text-body: var(--color-text-body);
 }
 
 @media (prefers-color-scheme: dark) {

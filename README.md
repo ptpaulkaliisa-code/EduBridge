@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EduBridge Africa
 
-## Getting Started
+Real-time school-to-parent communication platform for Uganda — attendance,
+grades, and fee visibility from any phone, SMS-first, no app download
+required.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router) + TypeScript
+- **Supabase** — Postgres, Auth (phone OTP), Storage, Row Level Security
+- **Tailwind CSS v4**
+- **Africa's Talking** — SMS delivery
+- **Vercel** — hosting + cron jobs
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # fill in Supabase + Africa's Talking credentials
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Other scripts:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build        # production build
+npm run lint          # ESLint
+npm run typecheck    # tsc --noEmit
+npm run format        # Prettier write
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Database
 
-## Learn More
+SQL migrations live in `supabase/migrations/`. Run them against your Supabase
+project in order (`001_initial_schema.sql`, `002_rls_policies.sql`,
+`003_seed_data.sql`) via the Supabase SQL editor or CLI.
 
-To learn more about Next.js, take a look at the following resources:
+## Project structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/app/(auth)` — login / OTP verification
+- `src/app/(dashboard)/{admin,teacher,parent}` — role-scoped dashboards
+- `src/app/api` — route handlers (auth, students, attendance, grades, fees, SMS, cron)
+- `src/components` — shared UI, layout nav, and feature components
+- `src/lib/supabase` — browser/server Supabase clients + session helper used by `src/proxy.ts`
+- `src/lib/africastalking` — SMS send helper
+- `src/lib/utils` — formatting, Zod validation schemas, constants
+- `src/types` — shared TypeScript types mirroring the database schema
+- `supabase/migrations` — SQL schema, RLS policies, seed data
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notes on the stack version
 
-## Deploy on Vercel
+This project runs Next.js 16, not 14 as referenced in the original product
+spec. Two things differ from that spec's proposed repo structure as a result:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `middleware.ts` is `src/proxy.ts` — Next.js 16 renamed Middleware to Proxy
+  (same behavior, new file convention).
+- There's no `tailwind.config.ts` — Tailwind v4 is configured via
+  `@theme`/`@import` directly in `src/app/globals.css`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `AGENTS.md` for why: this environment's Next.js docs (in
+`node_modules/next/dist/docs/`) take precedence over training-data
+assumptions about Next.js conventions.
+
+## Build phases
+
+This repo currently reflects **Phase 1, Week 1**: project scaffolding,
+Supabase wiring, and the full route/component folder structure with
+placeholder screens. Auth, admin setup, attendance, grades, and fees ship
+in Weeks 2–8.
