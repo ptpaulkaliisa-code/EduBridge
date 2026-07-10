@@ -64,13 +64,28 @@ export const updateAttendanceSchema = z.object({
   notes: z.string().trim().optional(),
 });
 
-export const gradeEntrySchema = z.object({
+export const createSubjectSchema = z.object({
+  name: z.string().trim().min(1, "Subject name is required"),
+  classId: z.string().uuid(),
+});
+
+export const gradeScoreEntrySchema = z.object({
   studentId: z.string().uuid(),
-  subjectId: z.string().uuid(),
-  assessmentName: z.string().trim().min(1),
   score: z.number().min(0),
+});
+
+export const submitGradesSchema = z.object({
+  subjectId: z.string().uuid(),
+  assessmentName: z.string().trim().min(1, "Assessment name is required"),
   maxScore: z.number().min(1).default(100),
   term: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+  academicYear: z.string().trim().min(1),
+  entries: z.array(gradeScoreEntrySchema).min(1, "No scores to submit"),
+});
+
+export const updateGradeSchema = z.object({
+  score: z.number().min(0).optional(),
+  maxScore: z.number().min(1).optional(),
 });
 
 export const feePaymentSchema = z.object({

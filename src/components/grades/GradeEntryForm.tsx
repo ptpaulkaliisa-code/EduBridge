@@ -9,6 +9,8 @@ interface GradeEntryFormProps {
   maxScore: number;
   onScoreChange: (studentId: string, score: number) => void;
   onSave: () => void;
+  disabled?: boolean;
+  saveLabel?: string;
 }
 
 // Teacher gradebook entry UI (PRD 5.4, Week 5).
@@ -17,6 +19,8 @@ export function GradeEntryForm({
   maxScore,
   onScoreChange,
   onSave,
+  disabled,
+  saveLabel = "Save Scores",
 }: GradeEntryFormProps) {
   const entered = rows.filter((r) => r.score !== null);
   const average = entered.length
@@ -45,9 +49,10 @@ export function GradeEntryForm({
       <button
         type="button"
         onClick={onSave}
-        className="mt-2 rounded-lg bg-[#114C5A] px-4 py-2 text-sm font-medium text-white"
+        disabled={disabled}
+        className="mt-2 rounded-lg bg-[#114C5A] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
       >
-        Save Scores
+        {saveLabel}
       </button>
     </div>
   );

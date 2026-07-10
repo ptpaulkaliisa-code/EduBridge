@@ -35,3 +35,15 @@ export function attendanceAbsentMessage(schoolName: string, studentName: string,
 export function attendanceLateMessage(schoolName: string, studentName: string, date: string) {
   return `${schoolName}: ${studentName} arrived LATE on ${formatDate(date)}. — EduBridge`;
 }
+
+export function gradeMessage(params: {
+  schoolName: string;
+  studentName: string;
+  score: number;
+  maxScore: number;
+  subjectName: string;
+  assessmentName: string;
+  classAverage: number;
+}) {
+  return `${params.schoolName}: ${params.studentName} scored ${params.score}/${params.maxScore} in ${params.subjectName} (${params.assessmentName}). Class avg: ${params.classAverage.toFixed(1)}. — EduBridge`;
+}
