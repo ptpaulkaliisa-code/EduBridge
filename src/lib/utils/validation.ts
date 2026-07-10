@@ -96,6 +96,12 @@ export const feePaymentSchema = z.object({
   referenceNumber: z.string().trim().optional(),
 });
 
+export const createAnnouncementSchema = z.object({
+  title: z.string().trim().min(1, "Title is required"),
+  body: z.string().trim().min(1, "Body is required"),
+  classId: z.string().uuid().optional(),
+});
+
 export const createFeeStructureSchema = z.object({
   name: z.string().trim().min(1, "Fee item name is required"),
   amount: z.number().positive(),
