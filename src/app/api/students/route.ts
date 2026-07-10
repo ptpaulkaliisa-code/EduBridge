@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/supabase/session";
 import { studentSchema } from "@/lib/utils/validation";
+import { formatPhoneNumber } from "@/lib/utils/format";
 
 // PRD 6.4 / 5.2 — students scoped to the caller's school (RLS,
 // migration 002), with optional class filter and name/admission search.
@@ -66,7 +67,9 @@ export async function POST(request: Request) {
       admission_number: parsed.data.admissionNumber,
       date_of_birth: parsed.data.dateOfBirth,
       gender: parsed.data.gender,
-      parent_phone: parsed.data.parentPhone,
+      parent_phone: parsed.data.parentPhone
+        ? formatPhoneNumber(parsed.data.parentPhone)
+        : undefined,
     })
     .select()
     .single();

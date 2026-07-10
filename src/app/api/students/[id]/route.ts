@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/supabase/session";
 import { updateStudentSchema } from "@/lib/utils/validation";
+import { formatPhoneNumber } from "@/lib/utils/format";
 
 export async function GET(
   _request: Request,
@@ -56,7 +57,8 @@ export async function PATCH(
     updates.admission_number = parsed.data.admissionNumber;
   if (parsed.data.dateOfBirth !== undefined) updates.date_of_birth = parsed.data.dateOfBirth;
   if (parsed.data.gender !== undefined) updates.gender = parsed.data.gender;
-  if (parsed.data.parentPhone !== undefined) updates.parent_phone = parsed.data.parentPhone;
+  if (parsed.data.parentPhone !== undefined)
+    updates.parent_phone = formatPhoneNumber(parsed.data.parentPhone);
   if (parsed.data.isActive !== undefined) updates.is_active = parsed.data.isActive;
 
   const supabase = await createClient();
