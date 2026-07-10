@@ -16,6 +16,7 @@ const PUBLIC_ROUTES = [
   "/api/auth/request-otp",
   "/api/auth/verify-otp",
   "/api/auth/logout",
+  "/api/auth/sms-hook",
 ];
 
 export async function updateSession(request: NextRequest) {
