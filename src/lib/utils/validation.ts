@@ -26,6 +26,12 @@ export const updateClassSchema = z.object({
   name: z.string().trim().min(1).optional(),
   level: z.string().trim().optional(),
   isActive: z.boolean().optional(),
+  classTeacherId: z.string().uuid().optional(),
+});
+
+export const createTeacherSchema = z.object({
+  fullName: z.string().trim().min(2, "Full name is required"),
+  phoneNumber: ugandaPhoneSchema,
 });
 
 export const studentSchema = z.object({
@@ -100,6 +106,7 @@ export const createAnnouncementSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
   body: z.string().trim().min(1, "Body is required"),
   classId: z.string().uuid().optional(),
+  sendSms: z.boolean().optional(),
 });
 
 export const createFeeStructureSchema = z.object({

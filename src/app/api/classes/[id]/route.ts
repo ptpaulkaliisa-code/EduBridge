@@ -57,6 +57,7 @@ export async function PATCH(
   if (parsed.data.name !== undefined) updates.name = parsed.data.name;
   if (parsed.data.level !== undefined) updates.level = parsed.data.level;
   if (parsed.data.isActive !== undefined) updates.is_active = parsed.data.isActive;
+  if (parsed.data.classTeacherId !== undefined) updates.class_teacher_id = parsed.data.classTeacherId;
 
   const supabase = await createClient();
   const { data, error } = await supabase

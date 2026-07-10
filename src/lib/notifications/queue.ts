@@ -56,3 +56,16 @@ export function paymentMessage(params: {
 }) {
   return `${params.schoolName}: Payment of UGX ${params.amountPaid.toLocaleString("en-UG")} received for ${params.studentName}. Balance: UGX ${params.balance.toLocaleString("en-UG")}. — EduBridge`;
 }
+
+// No exact PRD template for a teacher invite (only the parent one in
+// Appendix B) — adapted from it plus 7.1's "Your EduBridge account is
+// ready. Log in at [url]".
+export function teacherInviteMessage(schoolName: string) {
+  const url = process.env.NEXT_PUBLIC_APP_URL ?? "https://edubridge.africa";
+  return `${schoolName}: You've been added as a teacher on EduBridge. Log in at ${url} with this phone number. — EduBridge`;
+}
+
+export function announcementMessage(schoolName: string, title: string, body: string) {
+  const truncated = body.length > 100 ? `${body.slice(0, 100)}...` : body;
+  return `${schoolName}: ${title} — ${truncated}. Log in for full details. — EduBridge`;
+}

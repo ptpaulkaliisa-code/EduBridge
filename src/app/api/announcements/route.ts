@@ -2,16 +2,16 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/supabase/session";
 import { createAnnouncementSchema } from "@/lib/utils/validation";
+import { queueSMS, announcementMessage } from "@/lib/notifications/queue";
 
 const STAFF_ROLES = ["super_admin", "school_admin", "teacher"];
 
-// PRD 6.8 / 5.6 — minimal announcements CRUD, built here only because
-// Week 7's parent portal needs a real list to show; the fuller PRD 5.6
-// screen (rich text, SMS toggle + cost estimate, scheduling) is
-// otherwise Phase 2. GET relies entirely on RLS (migration 011) to
-// scope results — staff see everything in their school, parents see
-// school-wide (class_id null) + their child's class, no role branching
-// needed here.
+// PRD 6.8 / 5.6 — announcements CRUD. GET relies entirely on RLS
+// (migration 011) to scope results — staff see everything in their
+// school, parents see school-wide (class_id null) + their child's
+// class, no role branching needed here. The fuller PRD 5.6 screen
+// (rich text, scheduling) is still Phase 2; the SMS toggle + cost
+// estimate below is not.
 export async function GET() {
   const profile = await getCurrentProfile();
   if (!profile) {
@@ -66,5 +66,38 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ announcement: data }, { status: 201 });
+  let smsQueuedCount = 0;
+
+  if (parsed.data.sendSms) {
+    let studentsQuery = supabase
+      .from("students")
+      .select("full_name, parent_id, parent_phone")
+      .eq("school_id", profile.schoolId)
+      .eq("is_active", true);
+    if (parsed.data.classId) {
+      studentsQuery = studentsQuery.eq("class_id", parsed.data.classId);
+    }
+    const { data: students } = await studentsQuery;
+
+    const { data: school } = await supabase
+      .from("schools")
+      .select("name")
+      .eq("id", profile.schoolId)
+      .maybeSingle();
+    const message = announcementMessage(school?.name ?? "Your school", parsed.data.title, parsed.data.body);
+
+    for (const student of students ?? []) {
+      if (!student.parent_phone) continue;
+      const { error: queueError } = await queueSMS({
+        schoolId: profile.schoolId,
+        recipientPhone: student.parent_phone,
+        recipientUserId: student.parent_id,
+        type: "announcement",
+        message,
+      });
+      if (!queueError) smsQueuedCount++;
+    }
+  }
+
+  return NextResponse.json({ announcement: data, smsQueuedCount }, { status: 201 });
 }

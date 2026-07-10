@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/admin/fees", label: "Fees" },
   { href: "/admin/announcements", label: "Announcements" },
   { href: "/admin/incidents", label: "Incidents" },
+  { href: "/admin/system", label: "System" },
 ];
 
 export function AdminNav() {

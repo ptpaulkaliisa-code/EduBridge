@@ -13,31 +13,43 @@ interface AnnouncementRow {
   classes: { name: string } | null;
 }
 
-// Minimal announcements management (PRD 5.6) — built only so Week 7's
-// parent portal has a real list to show. The fuller screen (rich text,
-// SMS toggle + cost estimate, scheduling) is Phase 2.
+// Announcements composer (PRD 5.6): create + list, with an SMS toggle
+// and a rough per-recipient cost estimate (PRD 3.3: ~UGX 30-50/SMS).
+// Rich text and scheduling (also part of PRD 5.6's screen) are still
+// Phase 2.
 export default async function AdminAnnouncementsPage() {
   const profile = await getCurrentProfile();
 
   let announcements: AnnouncementRow[] = [];
-  let classes: { id: string; name: string }[] = [];
+  let classes: { id: string; name: string; studentCount: number }[] = [];
+  let totalStudentCount = 0;
 
   if (profile?.schoolId) {
     const supabase = await createClient();
-    const [{ data: announcementData }, { data: classData }] = await Promise.all([
+    const [{ data: announcementData }, { data: classData }, { count }] = await Promise.all([
       supabase
         .from("announcements")
         .select("id, title, body, created_at, classes(name)")
         .order("created_at", { ascending: false }),
       supabase
         .from("classes")
-        .select("id, name")
+        .select("id, name, students(count)")
         .eq("school_id", profile.schoolId)
         .eq("is_active", true)
         .order("name"),
+      supabase
+        .from("students")
+        .select("id", { count: "exact", head: true })
+        .eq("school_id", profile.schoolId)
+        .eq("is_active", true),
     ]);
     announcements = (announcementData as unknown as AnnouncementRow[] | null) ?? [];
-    classes = classData ?? [];
+    classes = (classData ?? []).map((c) => ({
+      id: c.id,
+      name: c.name,
+      studentCount: (c.students as unknown as { count: number }[] | null)?.[0]?.count ?? 0,
+    }));
+    totalStudentCount = count ?? 0;
   }
 
   return (
@@ -46,7 +58,7 @@ export default async function AdminAnnouncementsPage() {
       <main className="flex-1 p-6">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-[#172B36]">Announcements</h1>
-          <CreateAnnouncementForm classes={classes} />
+          <CreateAnnouncementForm classes={classes} totalStudentCount={totalStudentCount} />
         </div>
 
         {announcements.length === 0 ? (
