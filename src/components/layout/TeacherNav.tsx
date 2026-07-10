@@ -4,6 +4,7 @@ const LINKS = [
   { href: "/teacher", label: "Dashboard" },
   { href: "/teacher/attendance", label: "Attendance" },
   { href: "/teacher/grades", label: "Grades" },
+  { href: "/teacher/fees", label: "Fees" },
   { href: "/teacher/announcements", label: "Announcements" },
   { href: "/teacher/incidents", label: "Incidents" },
   { href: "/teacher/daily-reports", label: "Daily Reports" },

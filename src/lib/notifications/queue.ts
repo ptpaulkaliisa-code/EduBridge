@@ -47,3 +47,12 @@ export function gradeMessage(params: {
 }) {
   return `${params.schoolName}: ${params.studentName} scored ${params.score}/${params.maxScore} in ${params.subjectName} (${params.assessmentName}). Class avg: ${params.classAverage.toFixed(1)}. — EduBridge`;
 }
+
+export function paymentMessage(params: {
+  schoolName: string;
+  studentName: string;
+  amountPaid: number;
+  balance: number;
+}) {
+  return `${params.schoolName}: Payment of UGX ${params.amountPaid.toLocaleString("en-UG")} received for ${params.studentName}. Balance: UGX ${params.balance.toLocaleString("en-UG")}. — EduBridge`;
+}

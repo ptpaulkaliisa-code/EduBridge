@@ -95,3 +95,12 @@ export const feePaymentSchema = z.object({
   paymentMethod: z.enum(["cash", "bank", "mtn_momo", "airtel_money", "other"]),
   referenceNumber: z.string().trim().optional(),
 });
+
+export const createFeeStructureSchema = z.object({
+  name: z.string().trim().min(1, "Fee item name is required"),
+  amount: z.number().positive(),
+  term: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+  academicYear: z.string().trim().min(1),
+  classId: z.string().uuid().optional(),
+  dueDate: z.string().optional(),
+});
