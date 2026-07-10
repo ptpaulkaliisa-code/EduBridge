@@ -9,7 +9,14 @@ const ROLE_HOME: Record<string, string> = {
   parent: "/parent",
 };
 
-const PUBLIC_ROUTES = ["/", "/login", "/verify"];
+const PUBLIC_ROUTES = [
+  "/",
+  "/login",
+  "/verify",
+  "/api/auth/request-otp",
+  "/api/auth/verify-otp",
+  "/api/auth/logout",
+];
 
 export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
