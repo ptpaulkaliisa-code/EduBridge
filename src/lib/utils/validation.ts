@@ -17,6 +17,17 @@ export const otpVerifySchema = z.object({
   otp: z.string().length(6, "OTP must be 6 digits"),
 });
 
+export const createClassSchema = z.object({
+  name: z.string().trim().min(1, "Class name is required"),
+  level: z.string().trim().optional(),
+});
+
+export const updateClassSchema = z.object({
+  name: z.string().trim().min(1).optional(),
+  level: z.string().trim().optional(),
+  isActive: z.boolean().optional(),
+});
+
 export const studentSchema = z.object({
   fullName: z.string().trim().min(2, "Full name is required"),
   classId: z.string().uuid("Select a class"),
@@ -24,6 +35,16 @@ export const studentSchema = z.object({
   dateOfBirth: z.string().optional(),
   gender: z.enum(["male", "female", "other"]).optional(),
   parentPhone: ugandaPhoneSchema.optional(),
+});
+
+export const updateStudentSchema = z.object({
+  fullName: z.string().trim().min(2).optional(),
+  classId: z.string().uuid().optional(),
+  admissionNumber: z.string().trim().optional(),
+  dateOfBirth: z.string().optional(),
+  gender: z.enum(["male", "female", "other"]).optional(),
+  parentPhone: ugandaPhoneSchema.optional(),
+  isActive: z.boolean().optional(),
 });
 
 export const attendanceEntrySchema = z.object({
