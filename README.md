@@ -67,3 +67,13 @@ This repo currently reflects **Phase 1, Week 1**: project scaffolding,
 Supabase wiring, and the full route/component folder structure with
 placeholder screens. Auth, admin setup, attendance, grades, and fees ship
 in Weeks 2–8.
+
+## Cron jobs
+
+`vercel.json` currently has no `crons` block. The PRD (Section 11.2) calls
+for `/api/cron/process-sms` every 5 minutes and `/api/cron/fee-reminders`
+weekly — but Vercel's Hobby plan only allows daily cron schedules, and
+neither route is implemented yet (both return 501 until Weeks 4 and 7).
+Once the cron logic ships and the project is ready for near-real-time SMS,
+either upgrade to Vercel Pro and restore the PRD's schedule, or fall back
+to a daily cadence on Hobby.
