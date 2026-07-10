@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #172b36;
 
   /* EduBridge Africa brand palette — PRD Section 8.2 */
   --color-teal: #114c5a;
@@ -29,13 +29,6 @@
   --color-brand-arctic: var(--color-arctic);
   --color-brand-text-dark: var(--color-text-dark);
   --color-brand-text-body: var(--color-text-body);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

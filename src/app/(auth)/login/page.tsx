@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
@@ -34,9 +35,10 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[#F1F6F4] p-6">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-[#114C5A] p-6">
+      <Image src="/logo-on-teal.svg" alt="EduBridge Africa" width={220} height={56} priority />
       <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-sm">
-        <h1 className="mb-1 text-2xl font-semibold text-[#172B36]">EduBridge Africa</h1>
+        <h1 className="mb-1 text-2xl font-semibold text-[#172B36]">Log in</h1>
         <p className="mb-6 text-sm text-[#3A5A66]">
           Enter your phone number to receive a login code.
         </p>

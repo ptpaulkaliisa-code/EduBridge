@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
@@ -96,7 +97,8 @@ function VerifyForm() {
 // OTP verification screen (PRD 5.1, Week 2).
 export default function VerifyPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[#F1F6F4] p-6">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-[#114C5A] p-6">
+      <Image src="/logo-on-teal.svg" alt="EduBridge Africa" width={220} height={56} priority />
       <Suspense fallback={null}>
         <VerifyForm />
       </Suspense>
