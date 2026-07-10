@@ -5,6 +5,7 @@ import { Table, TableHead, TableCell } from "@/components/ui/Table";
 import { getCurrentProfile } from "@/lib/supabase/session";
 import { getParentChildren } from "@/lib/supabase/parent";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 interface GradeRow {
   subject_id: string;
@@ -60,9 +61,15 @@ export default async function ParentGradesPage({
       bySubject.set(row.subject_id, list);
     }
 
+    // Uses the admin client deliberately: RLS correctly stops a parent
+    // from reading other students' individual grade rows, but a true
+    // class average needs every student's score for the assessment.
+    // Only the aggregated number below is ever sent to the page — the
+    // per-student rows this query returns never get rendered.
+    const admin = createAdminClient();
     for (const [subjectId, rows] of bySubject) {
       const latest = rows[0];
-      const { data: classScores } = await supabase
+      const { data: classScores } = await admin
         .from("grades")
         .select("score")
         .eq("subject_id", subjectId)
