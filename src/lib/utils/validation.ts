@@ -53,6 +53,17 @@ export const attendanceEntrySchema = z.object({
   notes: z.string().trim().optional(),
 });
 
+export const submitAttendanceSchema = z.object({
+  classId: z.string().uuid(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD"),
+  entries: z.array(attendanceEntrySchema).min(1, "No students to submit"),
+});
+
+export const updateAttendanceSchema = z.object({
+  status: z.enum(["present", "absent", "late", "excused"]),
+  notes: z.string().trim().optional(),
+});
+
 export const gradeEntrySchema = z.object({
   studentId: z.string().uuid(),
   subjectId: z.string().uuid(),

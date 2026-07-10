@@ -10,14 +10,17 @@ interface AttendanceFormProps {
   students: AttendanceFormStudent[];
   onStatusChange: (studentId: string, status: AttendanceStatus) => void;
   onSubmit: () => void;
+  disabled?: boolean;
+  submitLabel?: string;
 }
 
-// Teacher attendance marking UI (PRD 5.3, Week 4). Wired up once the
-// /api/attendance route and Supabase queries land.
+// Teacher attendance marking UI (PRD 5.3, Week 4).
 export function AttendanceForm({
   students,
   onStatusChange,
   onSubmit,
+  disabled,
+  submitLabel = "Submit Attendance",
 }: AttendanceFormProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -48,9 +51,10 @@ export function AttendanceForm({
       <button
         type="button"
         onClick={onSubmit}
-        className="mt-2 rounded-lg bg-[#114C5A] px-4 py-2 text-sm font-medium text-white"
+        disabled={disabled}
+        className="mt-2 rounded-lg bg-[#114C5A] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
       >
-        Submit Attendance
+        {submitLabel}
       </button>
     </div>
   );
