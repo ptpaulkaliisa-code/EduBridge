@@ -1,0 +1,345 @@
+<title>EduBridge User Journeys</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: two vertical journey rails (parent, school) joined by a "what the parent sees" bridge table; EduBridge teal brand. */
+:root {
+  --bg: #F1F6F4;
+  --surface: #FFFFFF;
+  --ink: #172B36;
+  --muted: #3A5A66;
+  --line: #CFDDDA;
+  --brand: #114C5A;
+  --brand-soft: #DCEBE8;
+  --ok: #1D7A4E;   --ok-bg: #DDF2E6;
+  --warn: #9A6200; --warn-bg: #FBEFD5;
+  --bad: #B3261E;  --bad-bg: #FADCD9;
+  --f-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0E1C21; --surface: #15282F; --ink: #E4EFEC; --muted: #9DB7B3; --line: #2A4249;
+  --brand: #5FB8C4; --brand-soft: #1B3A42;
+  --ok: #6FD39C; --ok-bg: #173A2A; --warn: #F0C066; --warn-bg: #3A2E14; --bad: #F2938B; --bad-bg: #42201E;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0E1C21; --surface: #15282F; --ink: #E4EFEC; --muted: #9DB7B3; --line: #2A4249;
+  --brand: #5FB8C4; --brand-soft: #1B3A42;
+  --ok: #6FD39C; --ok-bg: #173A2A; --warn: #F0C066; --warn-bg: #3A2E14; --bad: #F2938B; --bad-bg: #42201E;
+  color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 40px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 4.5vw, 40px); line-height: 1.1; }
+h2 { font-size: 22px; }
+h3 { font-size: 16px; font-weight: 600; }
+p { margin: 0; }
+code { font-family: var(--f-mono); font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand); }
+
+header { display: flex; flex-direction: column; gap: 14px; max-width: 760px; }
+header .lede { font-size: 17px; color: var(--muted); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 13px; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.03em;
+  padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.ok { color: var(--ok); background: var(--ok-bg); }
+.warn { color: var(--warn); background: var(--warn-bg); }
+.bad { color: var(--bad); background: var(--bad-bg); }
+
+.alert { border: 1px solid var(--bad); background: var(--bad-bg); border-radius: 10px; padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 8px; max-width: 860px; }
+.alert h3 { color: var(--bad); }
+.alert p { color: var(--ink); }
+
+.journeys { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+@media (max-width: 860px) { .journeys { grid-template-columns: 1fr; } }
+.journey { min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.journey-head { display: flex; flex-direction: column; gap: 4px; padding-bottom: 12px; border-bottom: 2px solid var(--brand); }
+.journey-head p { color: var(--muted); font-size: 14px; }
+
+.phase { font-family: var(--f-display); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); padding-left: 44px; margin-top: 6px; }
+
+ol.rail { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+ol.rail > li { position: relative; padding: 0 0 16px 44px; }
+ol.rail > li::before { content: ""; position: absolute; left: 15px; top: 30px; bottom: 0; width: 2px; background: var(--line); }
+ol.rail > li:last-child::before { display: none; }
+.node { position: absolute; left: 0; top: 2px; width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center; font-family: var(--f-display); font-weight: 600; font-size: 14px;
+  background: var(--surface); border: 2px solid var(--line); color: var(--ink); font-variant-numeric: tabular-nums; }
+li.s-ok .node { border-color: var(--ok); color: var(--ok); }
+li.s-warn .node { border-color: var(--warn); color: var(--warn); }
+li.s-bad .node { border-color: var(--bad); color: var(--bad); background: var(--bad-bg); }
+
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 8px; }
+li.s-bad .step { border-color: var(--bad); }
+.step-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+.where { font-size: 12px; color: var(--muted); font-family: var(--f-mono); }
+.step p { color: var(--ink); font-size: 14px; }
+.step .note { color: var(--muted); font-size: 13px; }
+.branch { border-left: 3px solid var(--warn); background: var(--warn-bg); padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 13px; }
+.branch.badb { border-left-color: var(--bad); background: var(--bad-bg); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12.5px; padding: 3px 9px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); display: inline-flex; gap: 6px; align-items: center; }
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; }
+.chip .dot.ok { background: var(--ok); } .chip .dot.warn { background: var(--warn); } .chip .dot.bad { background: var(--bad); }
+
+section.bridge { display: flex; flex-direction: column; gap: 14px; }
+section.bridge > p { color: var(--muted); max-width: 760px; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-display); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--bg); }
+tr:last-child td { border-bottom: none; }
+td .pill { margin-bottom: 4px; }
+td small { display: block; color: var(--muted); font-size: 12.5px; }
+
+section.fixes { display: flex; flex-direction: column; gap: 14px; }
+ol.fixlist { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+ol.fixlist li { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+ol.fixlist .n { font-family: var(--f-display); font-weight: 700; color: var(--brand); font-size: 13px; letter-spacing: 0.06em; }
+ol.fixlist p { font-size: 14px; color: var(--muted); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">EduBridge Africa · traced from the code on main @ 69e950b</span>
+  <h1>How a parent and a school actually use EduBridge</h1>
+  <p class="lede">There is no app to download. EduBridge is a website a parent opens from a link on any phone browser, and SMS does the rest. Below is every step from first contact to daily use, marked by what the code does today.</p>
+  <div class="legend">
+    <span class="pill ok">Works</span>
+    <span class="pill warn">Partial or needs setup</span>
+    <span class="pill bad">Not built / blocks the journey</span>
+  </div>
+</header>
+
+<div class="alert" role="note">
+  <h3>A parent cannot get in today</h3>
+  <p>When an admin adds a student, the parent's phone number is saved on the student record only. No parent account is ever created and the student is never linked to one. So at step 3 a parent gets “Account not found — contact your school admin”, and even if one got through, their dashboard would show no children. Separately, every alert SMS is queued but nothing sends the queue.</p>
+</div>
+
+<div class="journeys">
+
+  <!-- PARENT -->
+  <section class="journey" aria-labelledby="parent-h">
+    <div class="journey-head">
+      <span class="eyebrow">Journey A</span>
+      <h2 id="parent-h">Parent</h2>
+      <p>A guardian with a basic smartphone and a Ugandan number.</p>
+    </div>
+
+    <div class="phase">Getting in</div>
+    <ol class="rail">
+      <li class="s-bad">
+        <span class="node">1</span>
+        <div class="step">
+          <div class="step-top"><h3>School registers the parent</h3><span class="pill bad">Not built</span></div>
+          <p>Admin adds the child with a parent phone number. That number is stored on the student, but no parent login account is made and <code>students.parent_id</code> stays empty.</p>
+          <span class="where">api/students/route.ts</span>
+        </div>
+      </li>
+      <li class="s-warn">
+        <span class="node">2</span>
+        <div class="step">
+          <div class="step-top"><h3>Parent gets the link</h3><span class="pill warn">Manual</span></div>
+          <p>Opens the EduBridge web address in the phone browser and taps “Log in”. Nothing sends the link today; the school would have to share it by hand.</p>
+          <p class="note">No install. There is also no home-screen icon setup (no web app manifest) yet.</p>
+          <span class="where">app/page.tsx</span>
+        </div>
+      </li>
+      <li class="s-bad">
+        <span class="node">3</span>
+        <div class="step">
+          <div class="step-top"><h3>Enters phone number</h3><span class="pill bad">Blocked by 1</span></div>
+          <p>The server checks the number belongs to an active account. No self-signup, by design.</p>
+          <div class="branch badb">Not registered → “Account not found — contact your school admin”. This is where every parent stops today.</div>
+          <span class="where">/login → api/auth/request-otp</span>
+        </div>
+      </li>
+      <li class="s-warn">
+        <span class="node">4</span>
+        <div class="step">
+          <div class="step-top"><h3>Receives a login code by SMS</h3><span class="pill warn">Needs config</span></div>
+          <p>Supabase generates the code; a webhook sends it through Africa's Talking: “Your EduBridge Africa login code is 123456”.</p>
+          <span class="where">api/auth/sms-hook</span>
+        </div>
+      </li>
+      <li class="s-ok">
+        <span class="node">5</span>
+        <div class="step">
+          <div class="step-top"><h3>Enters the code</h3><span class="pill ok">Works</span></div>
+          <p>Code verified, account linked to the phone on first login, then sent to the parent home by role.</p>
+          <div class="branch">Wrong or expired code → “Invalid or expired code”, try again.</div>
+          <span class="where">/verify → api/auth/verify-otp</span>
+        </div>
+      </li>
+    </ol>
+
+    <div class="phase">Everyday use</div>
+    <ol class="rail">
+      <li class="s-bad">
+        <span class="node">6</span>
+        <div class="step">
+          <div class="step-top"><h3>Parent dashboard</h3><span class="pill bad">Empty</span></div>
+          <p>Lists the parent's children by looking up students where <code>parent_id</code> is this parent. Since step 1 never sets it, the list is empty.</p>
+          <span class="where">/parent · lib/supabase/parent.ts</span>
+        </div>
+      </li>
+      <li class="s-ok">
+        <span class="node">7</span>
+        <div class="step">
+          <div class="step-top"><h3>Checks on the child</h3><span class="pill ok">Built</span></div>
+          <div class="chips">
+            <span class="chip"><span class="dot ok"></span>Attendance</span>
+            <span class="chip"><span class="dot ok"></span>Grades + class average</span>
+            <span class="chip"><span class="dot ok"></span>Fees &amp; balance</span>
+            <span class="chip"><span class="dot ok"></span>Announcements</span>
+            <span class="chip"><span class="dot bad"></span>Daily reports</span>
+            <span class="chip"><span class="dot bad"></span>Incidents</span>
+          </div>
+          <p class="note">Daily reports and Incidents are titled placeholder pages (Phase 2).</p>
+        </div>
+      </li>
+      <li class="s-bad">
+        <span class="node">8</span>
+        <div class="step">
+          <div class="step-top"><h3>Gets SMS alerts without logging in</h3><span class="pill bad">Never sent</span></div>
+          <p>Absences, new grades, payments and announcements each queue an SMS as “pending”. The worker that should send them returns “Not implemented”, and no cron schedule is set in <code>vercel.json</code>.</p>
+          <span class="where">lib/notifications/queue.ts · api/cron/process-sms</span>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- SCHOOL -->
+  <section class="journey" aria-labelledby="school-h">
+    <div class="journey-head">
+      <span class="eyebrow">Journey B</span>
+      <h2 id="school-h">School admin</h2>
+      <p>Head teacher or office admin. A bursar logs in the same way and lands on Fees.</p>
+    </div>
+
+    <div class="phase">Onboarding the school</div>
+    <ol class="rail">
+      <li class="s-warn">
+        <span class="node">1</span>
+        <div class="step">
+          <div class="step-top"><h3>School and first admin created</h3><span class="pill warn">By hand in SQL</span></div>
+          <p>There is no school signup screen and the super-admin schools API is a stub. EduBridge staff insert the school and the admin's phone in the database.</p>
+          <span class="where">api/schools (501) · supabase/migrations</span>
+        </div>
+      </li>
+      <li class="s-ok">
+        <span class="node">2</span>
+        <div class="step">
+          <div class="step-top"><h3>Admin logs in</h3><span class="pill ok">Works</span></div>
+          <p>Same phone and SMS-code login as parents, then lands on <code>/admin</code> (bursar on <code>/admin/fees</code>).</p>
+        </div>
+      </li>
+      <li class="s-warn">
+        <span class="node">3</span>
+        <div class="step">
+          <div class="step-top"><h3>Sets up the term</h3><span class="pill warn">Mostly built</span></div>
+          <div class="chips">
+            <span class="chip"><span class="dot ok"></span>Classes</span>
+            <span class="chip"><span class="dot ok"></span>Teachers (creates their logins)</span>
+            <span class="chip"><span class="dot ok"></span>Students, one at a time</span>
+            <span class="chip"><span class="dot bad"></span>CSV student import</span>
+            <span class="chip"><span class="dot ok"></span>Fee structure</span>
+          </div>
+          <p class="note">Teachers get real accounts here; parents don't. Adding 600 students one by one is the practical onboarding wall.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="phase">Running the school day</div>
+    <ol class="rail">
+      <li class="s-ok">
+        <span class="node">4</span>
+        <div class="step">
+          <div class="step-top"><h3>Teachers record attendance and grades</h3><span class="pill ok">Built</span></div>
+          <p>Teachers mark each class register and fill the gradebook; the admin sees school-wide overviews.</p>
+          <span class="where">/teacher/attendance · /teacher/grades · /admin/attendance · /admin/grades</span>
+        </div>
+      </li>
+      <li class="s-ok">
+        <span class="node">5</span>
+        <div class="step">
+          <div class="step-top"><h3>Bursar records fee payments</h3><span class="pill ok">Built</span></div>
+          <p>Each payment updates the student's balance and queues a receipt SMS. Weekly overdue reminders are still a stub.</p>
+          <span class="where">/admin/fees · api/cron/fee-reminders (501)</span>
+        </div>
+      </li>
+      <li class="s-ok">
+        <span class="node">6</span>
+        <div class="step">
+          <div class="step-top"><h3>Sends an announcement</h3><span class="pill ok">Built</span></div>
+          <p>Posts to the parent portal, with an option to also SMS every parent.</p>
+          <span class="where">/admin/announcements</span>
+        </div>
+      </li>
+      <li class="s-warn">
+        <span class="node">7</span>
+        <div class="step">
+          <div class="step-top"><h3>Checks system health</h3><span class="pill warn">Shows the gap</span></div>
+          <p>Lists the SMS queue. Today it would show every message stuck at “pending”.</p>
+          <span class="where">/admin/system</span>
+        </div>
+      </li>
+    </ol>
+  </section>
+</div>
+
+<section class="bridge" aria-labelledby="bridge-h">
+  <span class="eyebrow">Where the two journeys meet</span>
+  <h2 id="bridge-h">What the parent sees when the school acts</h2>
+  <p>The product promise is the right-hand column: parents hear about it by SMS without opening anything. That channel is the part that doesn't run yet.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>School does</th><th>In the parent portal</th><th>By SMS to the parent</th></tr></thead>
+      <tbody>
+        <tr><td>Teacher marks a child absent</td>
+          <td><span class="pill ok">Shows</span><small>once the parent is linked</small></td>
+          <td><span class="pill bad">Queued, never sent</span><small>api/attendance</small></td></tr>
+        <tr><td>Teacher submits grades</td>
+          <td><span class="pill ok">Shows, with class average</span></td>
+          <td><span class="pill bad">Queued, never sent</span><small>api/grades</small></td></tr>
+        <tr><td>Bursar records a payment</td>
+          <td><span class="pill ok">Balance updates</span></td>
+          <td><span class="pill bad">Queued, never sent</span><small>api/fees/payments</small></td></tr>
+        <tr><td>Fees go overdue</td>
+          <td><span class="pill ok">Balance shows</span></td>
+          <td><span class="pill bad">Reminder job not built</span><small>api/cron/fee-reminders</small></td></tr>
+        <tr><td>Admin posts an announcement</td>
+          <td><span class="pill ok">Shows</span></td>
+          <td><span class="pill bad">Queued, never sent</span><small>api/announcements</small></td></tr>
+        <tr><td>Admin sends a one-off SMS</td>
+          <td><span class="pill warn">n/a</span></td>
+          <td><span class="pill bad">Not built</span><small>api/sms/send (501)</small></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="fixes" aria-labelledby="fix-h">
+  <span class="eyebrow">To make Journey A work end to end</span>
+  <h2 id="fix-h">Three changes, in this order</h2>
+  <ol class="fixlist">
+    <li><span class="n">FIRST</span><h3>Create and link parent accounts</h3><p>When a student is saved with a parent phone, find or create a parent user for that number and set <code>parent_id</code>. One parent, many children, matched by phone. Without this nobody gets past login.</p></li>
+    <li><span class="n">SECOND</span><h3>Send the SMS queue</h3><p>Implement <code>process-sms</code> to send pending rows through Africa's Talking, mark them sent or failed, and add the cron schedule to <code>vercel.json</code>. This is the feature parents notice most.</p></li>
+    <li><span class="n">THIRD</span><h3>Welcome SMS with the link</h3><p>When a parent account is created, text them the web address and how to log in. That replaces the “download” moment and removes step 2's manual handoff.</p></li>
+  </ol>
+</section>
+
+<footer>Traced from the repository source: routes, API handlers and migrations. Build, lint and typecheck pass; nothing here was run against a live Supabase project or Africa's Talking account.</footer>
+</div>
