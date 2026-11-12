@@ -65,6 +65,12 @@ export function teacherInviteMessage(schoolName: string) {
   return `${schoolName}: You've been added as a teacher on EduBridge. Log in at ${url} with this phone number. — EduBridge`;
 }
 
+// PRD Appendix B parent welcome, adapted like the teacher invite above.
+export function parentWelcomeMessage(schoolName: string, studentName: string) {
+  const url = process.env.NEXT_PUBLIC_APP_URL ?? "https://edubridge.africa";
+  return `${schoolName}: You can now follow ${studentName}'s attendance, grades and fees on EduBridge. Log in at ${url} with this phone number. — EduBridge`;
+}
+
 export function announcementMessage(schoolName: string, title: string, body: string) {
   const truncated = body.length > 100 ? `${body.slice(0, 100)}...` : body;
   return `${schoolName}: ${title} — ${truncated}. Log in for full details. — EduBridge`;

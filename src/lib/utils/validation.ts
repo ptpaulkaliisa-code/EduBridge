@@ -41,6 +41,7 @@ export const studentSchema = z.object({
   dateOfBirth: z.string().optional(),
   gender: z.enum(["male", "female", "other"]).optional(),
   parentPhone: ugandaPhoneSchema.optional(),
+  parentName: z.string().trim().optional(),
 });
 
 export const updateStudentSchema = z.object({
@@ -50,6 +51,7 @@ export const updateStudentSchema = z.object({
   dateOfBirth: z.string().optional(),
   gender: z.enum(["male", "female", "other"]).optional(),
   parentPhone: ugandaPhoneSchema.optional(),
+  parentName: z.string().trim().optional(),
   isActive: z.boolean().optional(),
 });
 

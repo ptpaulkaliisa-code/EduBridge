@@ -3,6 +3,11 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/supabase/session";
 import { studentSchema } from "@/lib/utils/validation";
 import { formatPhoneNumber } from "@/lib/utils/format";
+import {
+  linkParentAccount,
+  queueParentWelcome,
+  type ParentLinkResult,
+} from "@/lib/parents/link";
 
 // PRD 6.4 / 5.2 — students scoped to the caller's school (RLS,
 // migration 002), with optional class filter and name/admission search.
@@ -57,6 +62,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
+  const parentPhone = parsed.data.parentPhone
+    ? formatPhoneNumber(parsed.data.parentPhone)
+    : undefined;
+
+  let parentLink: ParentLinkResult | null = null;
+  if (parentPhone) {
+    try {
+      parentLink = await linkParentAccount({
+        phoneNumber: parentPhone,
+        parentName: parsed.data.parentName,
+        studentName: parsed.data.fullName,
+      });
+    } catch (e) {
+      return NextResponse.json({ error: (e as Error).message }, { status: 500 });
+    }
+  }
+
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("students")
@@ -67,9 +89,8 @@ export async function POST(request: Request) {
       admission_number: parsed.data.admissionNumber,
       date_of_birth: parsed.data.dateOfBirth,
       gender: parsed.data.gender,
-      parent_phone: parsed.data.parentPhone
-        ? formatPhoneNumber(parsed.data.parentPhone)
-        : undefined,
+      parent_phone: parentPhone,
+      parent_id: parentLink?.parentId ?? undefined,
     })
     .select()
     .single();
@@ -78,5 +99,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ student: data }, { status: 201 });
+  if (parentPhone && parentLink?.created && parentLink.parentId) {
+    await queueParentWelcome({
+      schoolId: profile.schoolId,
+      phoneNumber: parentPhone,
+      parentId: parentLink.parentId,
+      studentName: parsed.data.fullName,
+    });
+  }
+
+  return NextResponse.json(
+    { student: data, warning: parentLink?.warning },
+    { status: 201 },
+  );
 }

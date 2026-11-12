@@ -18,6 +18,7 @@ const initialForm = {
   dateOfBirth: "",
   gender: "",
   parentPhone: "",
+  parentName: "",
 };
 
 export function AddStudentForm({ classes }: { classes: ClassOption[] }) {
@@ -25,6 +26,7 @@ export function AddStudentForm({ classes }: { classes: ClassOption[] }) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   function update<K extends keyof typeof initialForm>(key: K, value: string) {
@@ -34,6 +36,7 @@ export function AddStudentForm({ classes }: { classes: ClassOption[] }) {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+    setNotice(null);
     setLoading(true);
 
     const res = await fetch("/api/students", {
@@ -46,6 +49,7 @@ export function AddStudentForm({ classes }: { classes: ClassOption[] }) {
         dateOfBirth: form.dateOfBirth || undefined,
         gender: form.gender || undefined,
         parentPhone: form.parentPhone || undefined,
+        parentName: form.parentName || undefined,
       }),
     });
     const data = await res.json();
@@ -57,8 +61,13 @@ export function AddStudentForm({ classes }: { classes: ClassOption[] }) {
     }
 
     setForm(initialForm);
-    setOpen(false);
     router.refresh();
+    // Keep the modal open so the admin sees why the parent wasn't linked.
+    if (data.warning) {
+      setNotice(`${data.student?.full_name ?? "Student"} added. ${data.warning}`);
+      return;
+    }
+    setOpen(false);
   }
 
   return (
@@ -66,7 +75,13 @@ export function AddStudentForm({ classes }: { classes: ClassOption[] }) {
       <Button onClick={() => setOpen(true)} disabled={classes.length === 0}>
         + Add student
       </Button>
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setNotice(null);
+        }}
+      >
         <h2 className="mb-4 text-lg font-semibold text-[#172B36]">Add student</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <Input
@@ -117,7 +132,23 @@ export function AddStudentForm({ classes }: { classes: ClassOption[] }) {
             value={form.parentPhone}
             onChange={(e) => update("parentPhone", e.target.value)}
           />
+          {form.parentPhone && (
+            <Input
+              placeholder="Parent / guardian name (optional)"
+              value={form.parentName}
+              onChange={(e) => update("parentName", e.target.value)}
+            />
+          )}
+          {form.parentPhone && (
+            <p className="text-xs text-[#3A5A66]">
+              This number becomes the parent&apos;s login. If it&apos;s new, they&apos;ll get a
+              welcome SMS with the link.
+            </p>
+          )}
           {error && <p className="text-sm text-red-600">{error}</p>}
+          {notice && (
+            <p className="rounded-lg bg-amber-50 p-2 text-sm text-amber-800">{notice}</p>
+          )}
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
               Cancel
